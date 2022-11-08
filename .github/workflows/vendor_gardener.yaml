@@ -1,0 +1,18 @@
+name: Vendor Gardener
+on:
+  push:
+    branches:
+      - dependabot/go_modules/github.com/gardener/**
+  pull_request:
+    branches:
+      - dependabot/go_modules/github.com/gardener/**
+
+jobs:
+  run:
+    name: Run make revendor
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Make revendor
+        run: make revendor
