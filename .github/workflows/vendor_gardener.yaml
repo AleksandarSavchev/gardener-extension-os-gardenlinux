@@ -24,8 +24,8 @@ jobs:
       run: make revendor
     - name: Commit changes
       run: |
-        git config user.name github-actions
-        git config user.email github-actions@github.com
+        git config user.name gardener-robot-ci-2 
+        git config user.email gardener.ci.user2@gmail.com
         git add .
-        git commit -m "make revendor"
+        git commit -m"make revendor"
         git push origin
