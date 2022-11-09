@@ -7,6 +7,8 @@ on:
     branches:
       - dependabot/go_modules/github.com/gardener/**
 
+permissions: read-all|write-all
+
 jobs:
   run:
     name: Run make revendor
