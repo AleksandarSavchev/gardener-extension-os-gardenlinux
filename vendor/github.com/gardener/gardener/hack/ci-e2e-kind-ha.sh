@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright (c) 2020 SAP SE or an SAP affiliate company. All rights reserved. This file is licensed under the Apache Software License, v. 2 except as noted otherwise in the LICENSE file
+# Copyright (c) 2022 SAP SE or an SAP affiliate company. All rights reserved. This file is licensed under the Apache Software License, v. 2 except as noted otherwise in the LICENSE file
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,11 +14,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -o errexit
 set -o nounset
 set -o pipefail
+set -o errexit
+set -x
 
-echo "> Test Cover Clean"
+source $(dirname "${0}")/ci-common.sh
 
-find . -name "*.coverprofile" -type f -delete
-rm -f test.coverage.html test.coverprofile
+clamp_mss_to_pmtu
+
+# test setup
+make kind-ha-up
+
+# export all container logs and events after test execution
+trap "
+  ( export_logs 'gardener-local-ha';
+    export_events_for_kind 'gardener-local-ha'; export_events_for_shoots )
+  ( make kind-ha-down )
+" EXIT
+
+make gardener-ha-up
+make KUBECONFIG=$KUBECONFIG test-e2e-local
+make gardener-ha-down
