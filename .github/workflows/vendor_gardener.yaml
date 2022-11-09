@@ -7,7 +7,7 @@ on:
     branches:
       - dependabot/go_modules/github.com/gardener/**
 
-permissions: read-all|write-all
+permissions: write-all
 
 jobs:
   run:
